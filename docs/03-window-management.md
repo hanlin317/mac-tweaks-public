@@ -14,6 +14,10 @@ work = (screen.x + 5, screen.y + 43, screen.width - 10, screen.height - 48)
 So on the MacBook (`0,0,1800×1169`) the work area is `5,43,1790×1121`, and on the external display
 (`-2560,-160,2560×1440`) it is `-2555,-117,2550×1392`.
 
+The helpers read the current `CGDisplayBounds` at runtime, so a different display arrangement still
+works; only the example rects above change. Keep the external display's macOS arrangement consistent
+with what you expect the swipes to do.
+
 Halves:
 
 - left: `x = work.minX`, `w = (work.width - 5) / 2`
