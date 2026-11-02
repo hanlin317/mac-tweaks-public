@@ -1,7 +1,8 @@
 # Window management
 
-This Mac uses BTT for window management. yabai and skhd are installed on disk but **no longer
-running and not part of the active setup**; their old configs are not included.
+This Mac uses BTT for window management. yabai and skhd have both been uninstalled — binaries,
+launch agents and leftover configs are all gone as of 2026-11-02. Neither is part of the active
+setup, and their old configs are not included here.
 
 ## Geometry
 

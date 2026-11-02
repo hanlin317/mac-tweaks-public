@@ -34,6 +34,9 @@
 - Found the `com.apple.macl` install hazard: a replaced binary copied with `cp -p` can be SIGKILLed
   (exit 137); a clean copy works.
 - Documentation snapshot and public sanitized repo created.
+- Uninstalled yabai and skhd: their binaries and launch agents were already gone; removed the
+  last leftover configs (`~/.config/yabai/yabairc`, `~/yabairc`, `~/.config/skhd/skhdrc`,
+  `~/skhdrc`).
 
 ## Test evidence (condensed)
 
@@ -65,6 +68,7 @@
 - **OpenCode**: event names are version-specific; re-check after an OpenCode update. Hot reloads can
   create duplicate plugin instances until a clean server restart.
 - **Wifi scan**: requires Location permission for `WifiScan.app`.
-- **Retired**: yabai and skhd configs are not part of the active setup and are excluded.
+- **Retired**: yabai and skhd are uninstalled as of 2026-11-02; neither is part of the active
+  setup.
 - **Not implemented**: a health indicator for silently failing scripts, and git version control of
   the live config (this repo is now that version history).

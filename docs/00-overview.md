@@ -73,8 +73,8 @@ OpenCode session execution succeeded
 - credential stores, API keys and app databases.
 - Compiled helpers and `.app` bundles; rebuild from source.
 - SketchyBar backup folders and `.DS_Store`.
-- yabai/skhd configs: both are installed on disk but no longer used. They are not part of the
-  active setup and are excluded.
+- yabai and skhd: both uninstalled on 2026-11-02; no binaries, launch agents or configs remain.
+  Neither is part of the active setup.
 
 ## Status of the main features
 
