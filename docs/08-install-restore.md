@@ -46,12 +46,13 @@ scripts/build-helpers.sh
 ```
 
 This compiles every `helper/*.swift` into the repo's `config/sketchybar/helper/` folder and builds
-`WifiScan.app` for the Location permission. Then copy the built binaries into the live config:
+`WifiScan.app` (Location permission) and `2026-11-01-CalendarAccess.app` (Calendar permission). Then copy the built binaries into the live config:
 
 ```bash
 cp config/sketchybar/helper/2026-11-01-display-transfer-fast ~/.config/sketchybar/helper/
 cp config/sketchybar/helper/2026-11-01-tile-picker ~/.config/sketchybar/helper/
 cp config/sketchybar/helper/2026-11-01-menu-bar-coordinator ~/.config/sketchybar/helper/
+cp -R config/sketchybar/helper/WifiScan.app config/sketchybar/helper/2026-11-01-CalendarAccess.app ~/.config/sketchybar/helper/
 # plus any other helpers the bar uses
 ```
 

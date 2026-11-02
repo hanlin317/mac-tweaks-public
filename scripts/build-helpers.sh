@@ -37,4 +37,26 @@ cat > "$APP/Contents/Info.plist" <<'PLIST'
 </dict></plist>
 PLIST
 codesign --force --sign - "$APP" >/dev/null 2>&1 || true
+
+# Calendar access needs an app bundle so macOS can grant Calendar permission.
+APP="2026-11-01-CalendarAccess.app"
+rm -rf "$APP"
+mkdir -p "$APP/Contents/MacOS"
+echo "build $APP"
+swiftc -target arm64-apple-macos14.0 -O 2026-11-01-calendar.swift -o "$APP/Contents/MacOS/CalendarAccess"
+cat > "$APP/Contents/Info.plist" <<'PLIST'
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0"><dict>
+<key>CFBundleIdentifier</key><string>local.sketchybar.calendar-access</string>
+<key>CFBundleName</key><string>SketchyBar Calendar</string>
+<key>CFBundleExecutable</key><string>CalendarAccess</string>
+<key>CFBundlePackageType</key><string>APPL</string>
+<key>CFBundleVersion</key><string>1</string>
+<key>LSUIElement</key><true/>
+<key>NSCalendarsFullAccessUsageDescription</key><string>Shows your next calendar event and countdown in the status bar. Events stay on this Mac.</string>
+<key>NSCalendarsUsageDescription</key><string>Shows your next calendar event and countdown in the status bar.</string>
+</dict></plist>
+PLIST
+codesign --force --sign - "$APP" >/dev/null 2>&1 || true
 echo "done"
