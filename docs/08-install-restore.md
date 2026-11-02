@@ -154,7 +154,14 @@ Manual checks:
 - Corner half + picker; second click cycles 1/2 → 2/3 → 1/3.
 - Karabiner: tap Caps Lock = Escape; hold + WASD = arrows.
 
-## 9. What is not restorable from this repo
+## 9. macOS system settings
+
+System-level defaults (Dock, Finder, key repeat, hot corners, menu bar extras, etc.) are not
+snapshotted here. They are personal, change often, and are better reviewed in System Settings on the
+new machine. This repo captures the custom automation and the app-level configs, not every macOS
+preference.
+
+## 10. What is not restorable from this repo
 
 - BTT's internal data store, licence and account state.
 - App credentials, keychain items and API keys.
