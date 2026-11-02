@@ -1,0 +1,36 @@
+#!/bin/bash
+# Half gesture launcher: perform the original BTT 251 half first, then let the
+# picker offer the opposite half. The 251 config is the exact one from the
+# user's pre-picker trigger, so the half is unchanged and still happens if the
+# picker cannot run.
+set -u
+DIR="${1:-}"
+case "$DIR" in
+  left|right|top|bottom) ;;
+  *) exit 2 ;;
+esac
+
+H="$HOME/.config/sketchybar/helper"
+
+# Left/right: a window already docked to that side cycles its width
+# (1/2 -> 2/3 -> 1/3 -> 1/2) instead of being halved again. Exit 0 means the
+# cycle was applied; exit 3 means "not docked here, do the normal half".
+if [ "$DIR" = left ] || [ "$DIR" = right ]; then
+  "$H/2026-11-01-tile-picker" "$DIR" --cycle-if-half
+  [ $? -eq 0 ] && exit 0
+fi
+
+JSON=$(cat "$H/2026-11-01-tile-picker-251-$DIR.json" 2>/dev/null) || JSON=""
+
+if [ -n "$JSON" ]; then
+  SOCK=/tmp/com.hegenberg.BetterTouchTool.sock
+  BTTCLI=/Applications/BetterTouchTool.app/Contents/SharedSupport/bin/bttcli
+  if [ -S "$SOCK" ] && [ -x "$BTTCLI" ]; then
+    "$BTTCLI" trigger_action "json=$JSON" >/dev/null 2>&1 || true
+  else
+    ESC=$(printf '%s' "$JSON" | sed 's/\\/\\\\/g; s/"/\\"/g')
+    /usr/bin/osascript -e "tell application \"BetterTouchTool\" to trigger_action \"$ESC\"" >/dev/null 2>&1 || true
+  fi
+fi
+
+exec "$H/2026-11-01-tile-picker" "$DIR" --already

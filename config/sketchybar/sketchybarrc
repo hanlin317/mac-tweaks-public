@@ -1,0 +1,96 @@
+#!/bin/bash
+export CONFIG_DIR="${CONFIG_DIR:-$HOME/.config/sketchybar}"
+export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH"
+source "$CONFIG_DIR/colors.sh"
+source "$CONFIG_DIR/config.sh"
+P="$CONFIG_DIR/plugins"; C="$HOME/.cache/sketchybar"
+mkdir -p "$C"
+# Popup contents are regenerated because item identities may change on reload.
+rm -f "$C/popup."* "$C/popup_open" "$C/spaces.n"
+source "$P/display.sh"
+sketchybar --bar position=top height=$BAR_H notch_display_height=$NOTCH_H display=all \
+ color=0x00000000 border_width=0 shadow=off margin=5 y_offset=5 \
+ padding_left=0 padding_right=0 notch_width=$NOTCH_W topmost=window hidden=off sticky=on
+sketchybar --default updates=when_shown icon.font="$FONT:Regular:12" label.font="$FONT:Regular:12" \
+ icon.color=$TEXT3 label.color=$TEXT icon.padding_left=0 icon.padding_right=6 \
+ label.padding_left=0 label.padding_right=0 padding_left=0 padding_right=0 \
+ background.corner_radius=0 background.border_width=0 popup.y_offset=3 \
+ popup.height=1 popup.background.drawing=on popup.background.color=$SURFACE \
+ popup.background.border_color=$LINE popup.background.border_width=1 popup.background.corner_radius=8
+sketchybar --add event theme_change AppleInterfaceThemeChangedNotification \
+ --add event shell_cwd --add event focus_tick --add event ai_ready \
+ --add item theme left --set theme drawing=off updates=on script="$P/theme.sh" --subscribe theme theme_change \
+ --add item popups left --set popups drawing=off updates=on script="$P/popup_guard.sh" \
+ --subscribe popups front_app_switched space_change display_change system_woke
+# Left island: workspaces and active app. No branding or blinking cursor.
+sketchybar --add item space.padl left --set space.padl width=11 icon.drawing=off label.drawing=off \
+ --add item space.padr left --set space.padr width=5 icon.drawing=off label.drawing=off \
+ --add item spaces left --set spaces drawing=off updates=on update_freq=30 script="$P/spaces.sh" \
+ --subscribe spaces space_change display_change \
+ --add item app.padl left --set app.padl width=7 icon.drawing=off label.drawing=off \
+ --add item front_app left --set front_app icon.drawing=off label="App" label.color=$TEXT2 padding_right=11 \
+ update_freq=30 script="$P/front_app.sh" click_script="CONFIG_DIR='$CONFIG_DIR' bash '$P/appmenu.sh' open" popup.align=left \
+ --subscribe front_app front_app_switched \
+ --add item cwd left --set cwd drawing=off icon.drawing=off script="$P/git.sh" --subscribe cwd shell_cwd \
+ --add item git left --set git drawing=off icon=git label.max_chars=12
+# Work island: compact timer and next event, immediately beside the left island.
+sketchybar --add item work.gap left --set work.gap width=5 icon.drawing=off label.drawing=off \
+ --add item focus left --set focus icon="◷" icon.y_offset=3 icon.color=$ACCENT icon.padding_left=11 label=Focus padding_right=11 \
+ update_freq=1 script="$P/2026-11-01-focus.sh" click_script="CONFIG_DIR='$CONFIG_DIR' bash '$P/popup_click.sh' focus" \
+ --subscribe focus system_woke focus_tick \
+ --add item cal left --set cal icon.drawing=off label="Calendar" padding_left=10 padding_right=11 \
+ update_freq=30 script="$P/2026-11-01-calendar.sh" --subscribe cal system_woke
+# Bar-only task-ready indicators. Hidden until a new completion is received.
+for source in codex opencode; do
+ sketchybar --add item ready.$source left --set ready.$source drawing=off icon.drawing=off padding_left=10 padding_right=11 \
+ label="" click_script="CONFIG_DIR='$CONFIG_DIR' bash '$P/2026-11-01-task-ready.sh' ack $source"
+done
+sketchybar --add item ready.watch left --set ready.watch drawing=off updates=on update_freq=300 \
+ script="$P/2026-11-01-task-ready.sh" --subscribe ready.watch ai_ready system_woke front_app_switched
+# Right island, assembled from right to left.
+sketchybar --add item clock right --set clock icon="$(date +%m.%d)" label="$(date +%H:%M)" padding_left=12 padding_right=11 \
+ update_freq=10 script="$P/clock_tick.sh" click_script="open 'itsycal://date/now'" --subscribe clock system_woke \
+ --add item wifi right --set wifi icon=wifi padding_left=12 padding_right=12 update_freq=30 popup.align=right \
+ script="$P/wifi.sh" click_script="CONFIG_DIR='$CONFIG_DIR' bash '$P/wifi_scan.sh'" --subscribe wifi wifi_change system_woke
+for i in 5 4 3 2 1; do
+ sketchybar --add item bat.$i right --set bat.$i icon.drawing=off label="" label.width=4 \
+ background.height=10 background.drawing=on background.color=$LINE padding_right=2 click_script="$P/popup_click.sh bat"
+done
+sketchybar --add item bat right --set bat icon=bat label.drawing=off padding_left=12 padding_right=4 \
+ update_freq=30 script="$P/bat.sh" click_script="$P/popup_click.sh bat" --subscribe bat power_source_change system_woke \
+ --add item microphone right --set microphone icon=mic label="on" padding_left=8 padding_right=12 click_script="$P/popup_click.sh audio" \
+ --add item audio right --set audio icon=$'\xf3\xb0\x95\xbe' icon.font="JetBrainsMono Nerd Font Propo:Regular:12" label="Audio" padding_left=12 padding_right=4 \
+ update_freq=10 script="$P/2026-11-01-audio.sh" click_script="$P/popup_click.sh audio" --subscribe audio volume_change system_woke \
+ --add item deepseek right --set deepseek icon=ds label="—" padding_left=12 padding_right=12 update_freq=300 \
+ script="$P/2026-11-01-deepseek.sh" click_script="$P/popup_click.sh deepseek" --subscribe deepseek system_woke \
+ --add item agent.codex right --set agent.codex icon.drawing=off icon.width=0 icon.padding_right=0 \
+ label="—" padding_right=12 click_script="$P/popup_click.sh agent" \
+ --add item agent right --set agent icon=codex label.drawing=off padding_left=11 update_freq=30 \
+ script="$P/agent.sh" click_script="$P/popup_click.sh agent"
+sketchybar --add item settings.gap right --set settings.gap width=5 icon.drawing=off label.drawing=off \
+ --add item settings right --set settings icon="$SETTINGS_GLYPH" icon.font="$SETTINGS_FONT" icon.width=33 icon.align=center \
+ icon.padding_left=0 icon.padding_right=0 icon.y_offset=1 label.drawing=off y_offset=0 \
+ background.drawing=on background.color=$BG background.height=33 background.corner_radius=16 \
+ background.border_width=1 background.border_color=$LINE popup.align=left \
+ update_freq=15 script="$P/2026-11-01-settings.sh" click_script="CONFIG_DIR='$CONFIG_DIR' bash '$P/popup_click.sh' settings"
+ISL="background.color=$BG background.height=$NOTCH_H background.corner_radius=13 background.border_width=1 background.border_color=$LINE background.drawing=on"
+sketchybar --add bracket island.left space.padl space.padr app.padl front_app cwd git --set island.left $ISL \
+ --add bracket island.work focus cal ready.codex ready.opencode --set island.work $ISL \
+ --add bracket island.right agent agent.codex deepseek audio microphone bat bat.1 bat.2 bat.3 bat.4 bat.5 wifi clock --set island.right $ISL
+CONFIG_DIR="$CONFIG_DIR" "$P/spaces.sh"
+UL="background.drawing=off background.color=$TEXT background.height=2 background.y_offset=-15"
+for p in focus audio wifi front_app; do sketchybar --set $p $UL; done
+sketchybar --add bracket agent.u agent agent.codex --set agent.u $UL \
+ --add bracket bat.u bat bat.1 bat.2 bat.3 bat.4 bat.5 --set bat.u $UL
+for p in settings focus audio wifi front_app agent bat deepseek; do
+ sketchybar --set $p popup.height=1 popup.y_offset=3 popup.background.drawing=on popup.blur_radius=$POPUP_BLUR \
+ popup.background.color=$SURFACE popup.background.border_color=$LINE popup.background.border_width=1 popup.background.corner_radius=8
+done
+FRONT=$(lsappinfo info -only name "$(lsappinfo front)" 2>/dev/null | perl -ne 'print /^"LSDisplayName"="(.*)"$/ ? $1 : /^"([^\"]+)"/ ? $1 : "" if $. == 1')
+[ -n "$FRONT" ] && CONFIG_DIR="$CONFIG_DIR" SENDER=front_app_switched INFO="$FRONT" bash "$P/front_app.sh"
+sketchybar --update
+sketchybar --query displays | md5 > "$C/displays"
+date +%s > "$C/ready"
+
+# Coordinate native-menu access only at the screen's top 1pt. One owner across reloads.
+nohup "$CONFIG_DIR/helper/2026-11-01-menu-bar-coordinator" >/dev/null 2>&1 &

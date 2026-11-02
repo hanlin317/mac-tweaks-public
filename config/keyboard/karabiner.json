@@ -1,0 +1,74 @@
+{
+  "profiles": [
+    {
+      "name": "Default profile",
+      "selected": true,
+      "complex_modifications": {
+        "parameters": {
+          "basic.to_if_held_down_threshold_milliseconds": 150
+        },
+        "rules": [
+          {
+            "description": "Caps Lock: Hold for WASD-Arrows, Tap for Escape",
+            "manipulators": [
+              {
+                "type": "basic",
+                "from": { "key_code": "caps_lock", "modifiers": { "optional": ["any"] } },
+                "to": [ { "set_variable": { "name": "nav_mode", "value": 1 } } ],
+                "to_if_alone": [ { "key_code": "escape" } ],
+                "to_after_key_up": [ { "set_variable": { "name": "nav_mode", "value": 0 } } ]
+              },
+              {
+                "type": "basic",
+                "from": { "key_code": "w", "modifiers": { "optional": ["any"] } },
+                "to": [ { "key_code": "up_arrow" } ],
+                "conditions": [ { "type": "variable_if", "name": "nav_mode", "value": 1 } ]
+              },
+              {
+                "type": "basic",
+                "from": { "key_code": "a", "modifiers": { "optional": ["any"] } },
+                "to": [ { "key_code": "left_arrow" } ],
+                "conditions": [ { "type": "variable_if", "name": "nav_mode", "value": 1 } ]
+              },
+              {
+                "type": "basic",
+                "from": { "key_code": "s", "modifiers": { "optional": ["any"] } },
+                "to": [ { "key_code": "down_arrow" } ],
+                "conditions": [ { "type": "variable_if", "name": "nav_mode", "value": 1 } ]
+              },
+              {
+                "type": "basic",
+                "from": { "key_code": "d", "modifiers": { "optional": ["any"] } },
+                "to": [ { "key_code": "right_arrow" } ],
+                "conditions": [ { "type": "variable_if", "name": "nav_mode", "value": 1 } ]
+              }
+            ]
+          },
+          {
+            "description": "Home row mods - ctrl, opt, shift, command",
+            "enabled": false,
+            "manipulators": [
+              {
+                "from": { "simultaneous": [ { "key_code": "a" }, { "key_code": "s" }, { "key_code": "d" }, { "key_code": "f" } ] },
+                "to_if_held_down": [ { "key_code": "left_shift", "modifiers": ["left_command", "left_option", "left_control"] } ],
+                "type": "basic"
+              }
+            ]
+          }
+        ]
+      },
+      "devices": [
+        {
+          "identifiers": { "is_keyboard": true, "product_id": 834, "vendor_id": 1452 },
+          "simple_modifications": [
+            { "from": { "key_code": "backslash" }, "to": [{ "key_code": "close_bracket" }] },
+            { "from": { "key_code": "close_bracket" }, "to": [{ "key_code": "open_bracket" }] },
+            { "from": { "key_code": "delete_or_backspace" }, "to": [{ "key_code": "backslash" }] },
+            { "from": { "key_code": "open_bracket" }, "to": [{ "key_code": "delete_or_backspace" }] }
+          ]
+        }
+      ],
+      "virtual_hid_keyboard": { "keyboard_type_v2": "ansi" }
+    }
+  ]
+}

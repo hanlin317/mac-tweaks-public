@@ -1,0 +1,2 @@
+# Relevant Codex setting (the rest of ~/.codex/config.toml is intentionally not copied)
+notify = ["/Users/yourname/.codex/computer-use/Codex Computer Use.app/Contents/SharedSupport/SkyComputerUseClient.app/Contents/MacOS/SkyComputerUseClient", "turn-ended", "--previous-notify", "[\"\\/opt\\/homebrew\\/bin\\/python3\",\"\\/Users\\/yourname\\/.config\\/sketchybar\\/plugins\\/2026-11-01-codex-ready.py\"]"]

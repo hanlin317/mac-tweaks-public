@@ -1,0 +1,22 @@
+.DS_Store
+__pycache__/
+*.pyc
+.env
+.env.*
+config/sketchybar/helper/WifiScan.app/
+config/sketchybar/helper/*.app/
+# compiled helper binaries (source lives next to them)
+config/sketchybar/helper/2026-11-01-display-transfer-fast
+config/sketchybar/helper/2026-11-01-menu-bar-coordinator
+config/sketchybar/helper/2026-11-01-tile-picker
+config/sketchybar/helper/artfit
+config/sketchybar/helper/audio
+config/sketchybar/helper/axmenu
+config/sketchybar/helper/chromejs
+config/sketchybar/helper/clickaway
+config/sketchybar/helper/displays
+config/sketchybar/helper/events
+config/sketchybar/helper/newwin
+config/sketchybar/helper/notch
+config/sketchybar/helper/textpng
+config/sketchybar/helper/textspans

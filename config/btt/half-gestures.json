@@ -1,0 +1,35 @@
+{
+  "note": "Current half-gesture wiring. Each gesture is one BTT type-137 action; the wrapper dispatches the original 251 and then the picker. BTT 6.990 drops appended actions, so these replace the existing actions.",
+  "version": "2026-11-02",
+  "actions": [
+    {
+      "gesture": "Corner Click Top Left",
+      "trigger_uuid": "BA93AD1F-552E-4C50-9D51-A220FE9336CA",
+      "action_uuid": "90FE0AFA-1D7D-4A02-B15B-B4E9324E06DD",
+      "type": 137,
+      "command": "/bin/bash /Users/yourname/.config/sketchybar/helper/2026-11-01-tile-picker-run left"
+    },
+    {
+      "gesture": "Corner Click Top Right",
+      "trigger_uuid": "0FD4A25B-5995-4996-9881-F3514D7DF5F7",
+      "action_uuid": "27161342-0511-4D4E-BF5D-E96239F3F9E7",
+      "type": 137,
+      "command": "/bin/bash /Users/yourname/.config/sketchybar/helper/2026-11-01-tile-picker-run right"
+    },
+    {
+      "gesture": "1 Finger Tap Left Side Middle",
+      "trigger_uuid": "5928C09C-F6E1-4668-9A3F-BF4BC09D997B",
+      "action_uuid": "54569508-0D83-40F3-83EF-911351EED773",
+      "type": 137,
+      "command": "/bin/bash /Users/yourname/.config/sketchybar/helper/2026-11-01-tile-picker-run top"
+    },
+    {
+      "gesture": "1 Finger Tap Right Side Middle",
+      "trigger_uuid": "288F5F67-9D20-4DD4-9138-3D2B97CED194",
+      "action_uuid": "C89DE382-1DA3-4B00-9C7A-47D1D83402DC",
+      "type": 137,
+      "command": "/bin/bash /Users/yourname/.config/sketchybar/helper/2026-11-01-tile-picker-run bottom"
+    }
+  ],
+  "original_251_configs": "config/sketchybar/helper/2026-11-01-tile-picker-251-<direction>.json"
+}

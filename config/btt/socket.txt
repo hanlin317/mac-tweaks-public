@@ -1,0 +1,3 @@
+Socket server: enabled
+Socket: /tmp/com.hegenberg.BetterTouchTool.sock
+bttcli: /Applications/BetterTouchTool.app/Contents/SharedSupport/bin/bttcli

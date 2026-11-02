@@ -1,0 +1,2 @@
+BetterTouchTool 6.990
+macOS 27.2 (26B123) arm64
